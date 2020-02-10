@@ -1,0 +1,3 @@
+export const GETMATCHDATA = 'GETMATCHDATA';
+export const GETCATEGORY = 'GETCATEGORY';
+export const GETPRODUCT = 'GETPRODUCT';
