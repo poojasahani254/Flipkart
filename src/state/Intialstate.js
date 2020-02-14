@@ -3,8 +3,9 @@ const LoginState = {
 };
 const CategoryState = {
   CategoryData: {},
+  AllProductData: {},
 };
 module.exports = {
   LoginState,
-  CategoryState
+  CategoryState,
 };

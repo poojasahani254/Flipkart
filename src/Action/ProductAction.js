@@ -5,7 +5,11 @@ export const GetAllProduct = data => {
   return dispatch => {
     return Api(GetProductUrl, data, 'post')
       .then(response => {
-        if (response.data.status == 200) {
+        if (response.status == 200) {
+          // dispatch({
+          //   type: GETPRODUCT,
+          //   payload: response.data,
+          // });
           return Promise.resolve(response.data);
         } else {
           return Promise.resolve(false);

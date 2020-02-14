@@ -221,7 +221,7 @@ class App extends Component {
                         message: '',
                       });
                     }}>
-                    <Text style={fontlabel}>Used Phone Number</Text>
+                    <Text style={fontlabel}>Used Email id</Text>
                   </TouchableOpacity>
                 </View>
               ) : (
@@ -270,7 +270,7 @@ class App extends Component {
                         message: '',
                       });
                     }}>
-                    <Text style={fontlabel}>Used Email id</Text>
+                    <Text style={fontlabel}>Used Phone Number</Text>
                   </TouchableOpacity>
                 </View>
               )}
