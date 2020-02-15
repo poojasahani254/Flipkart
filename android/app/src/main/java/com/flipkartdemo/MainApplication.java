@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.Context;
 //import com.facebook.react.PackageList;
 import com.facebook.react.ReactApplication;
+import cl.json.RNSharePackage;
 import com.reactnativecommunity.asyncstorage.AsyncStoragePackage;
 import com.th3rdwave.safeareacontext.SafeAreaContextPackage;
 import com.swmansion.gesturehandler.react.RNGestureHandlerPackage;
@@ -33,6 +34,7 @@ public class MainApplication extends Application implements ReactApplication {
 //          @SuppressWarnings("UnnecessaryLocalVariable")
           // Packages that cannot be autolinked yet can be added manually here, for example:
           return Arrays.asList(new MainReactPackage(),
+            new RNSharePackage(),
             new AsyncStoragePackage(),
             new SafeAreaContextPackage(),
             new RNGestureHandlerPackage(),

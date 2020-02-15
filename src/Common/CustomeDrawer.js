@@ -502,8 +502,8 @@ const styles = StyleSheet.create({
     color: '#fff',
   },
   itemview: {
-    color: 'black',
-    fontSize: swidth * 0.04,
+    color: 'gray',
+    fontSize: swidth * 0.03,
   },
   horizontalline: {
     borderBottomColor: 'gray',

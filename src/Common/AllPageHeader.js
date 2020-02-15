@@ -93,7 +93,7 @@ const styles = StyleSheet.create({
   fontlabel: {
     fontSize: sheigth * 0.03,
     color: 'white',
-    fontFamily:'Roboto-Medium'
+    fontFamily: 'Roboto-Medium',
   },
   Roundview: {
     backgroundColor: 'red',

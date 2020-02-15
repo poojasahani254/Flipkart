@@ -44,6 +44,8 @@ target 'FlipkartDemo' do
 
   pod 'RNCAsyncStorage', :path => '../node_modules/@react-native-community/async-storage'
 
+  pod 'RNShare', :path => '../node_modules/react-native-share'
+
   target 'FlipkartDemoTests' do
     inherit! :search_paths
     # Pods for testing

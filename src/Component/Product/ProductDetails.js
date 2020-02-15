@@ -9,24 +9,66 @@ import {
   Dimensions,
   Animated,
   Image,
+  Share,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/AntDesign';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import Modal from '../../Common/CommonModal.js';
 import {ScrollView} from 'react-navigation';
-import {connect} from 'react-redux';
 
 Icon.loadFont();
 let swidth = Dimensions.get('window').width;
 let sheigth = Dimensions.get('window').height;
 const iconcolor = '#fff';
-let pagesize;
+let pagesize, descriptiontext;
+const imageurl = 'http://192.168.200.175:3000/images/';
 
 export default class ProductDetails extends Component {
   constructor(props) {
     super(props);
     this.opacity = new Animated.Value(0);
+    this.state = {
+      isvisible: false,
+    };
   }
+  componentDidMount(): void {
+    console.log(this.state.isvisible);
+  }
+
+  shareProductLink = () => {
+    Share.share(
+      {
+        message:
+          'This Product Is Sharing \n\n' +
+          'https://www.flipkart.com/chevit-men-s-casual-shoes-sneakers-men/p/itm4838a35bd826e?pid=SHOFZ8K3DPFYM8HF&lid=LSTSHOFZ8K3DPFYM8HFTMFLMX&marketplace=FLIPKART&srno=b_1_1&otracker=hp_omu_Deals%2Bof%2Bthe%2BDay_1_2.dealCard.OMU_Deals%2Bof%2Bthe%2BDay_V6NDE0289QVE_2&otracker1=hp_omu_SECTIONED_neo%2Fmerchandising_Deals%2Bof%2Bthe%2BDay_NA_dealCard_cc_1_NA_view-all_2&fm=neo%2Fmerchandising&iid=en_uo%2BoW%2FBHfJ5IUBAmyraWS6sx9M1FkwJKiUoOyVp%2FqQ2u3HsFKG2NXjAaqTI9RMHceGTtrxXuK6Eds6R6e2OALw%3D%3D&ppt=browse&ppn=browse&ssid=c7r1mkzqjk0000001581685948916',
+        url:
+          'https://www.flipkart.com/chevit-men-s-casual-shoes-sneakers-men' +
+          '/p/itm4838a35bd826e?pid=SHOFZ8K3DPFYM8HF&lid=LSTSHOFZ8K3DPFYM8HFTMF' +
+          'LMX&marketplace=FLIPKART&srno=b_1_1&otracker=hp_omu_Deals%2Bof%2Bthe%' +
+          '2BDay_1_2.dealCard.OMU_Deals%2Bof%2Bthe%2BDay_V6NDE0289QVE_2&otracker' +
+          '1=hp_omu_SECTIONED_neo%2Fmerchandising_Deals%2Bof%2Bthe%2BDay_' +
+          'NA_dealCard_cc_1_NA_view-all_2&fm=neo%2Fmerchandising&iid=' +
+          'en_uo%2BoW%2FBHfJ5IUBAmyraWS6sx9M1FkwJKiUoOyVp%2FqQ2u3HsFKG2NXjAaqTI' +
+          '9RMHceGTtrxXuK6Eds6R6e2OALw%3D%3D&ppt=browse&ppn=browse&ssid=c7r1mkzqjk' +
+          '0000001581685948916',
+        title: 'Product Share',
+      },
+      {
+        // Android only:
+        dialogTitle: 'Share Product',
+        // iOS only:
+        excludedActivityTypes: ['com.apple.UIKit.activity.PostToTwitter'],
+      },
+    );
+  };
+
+  modalVisble = () => {
+    this.setState({
+      isvisible: !this.state.isvisible,
+    });
+  };
+
   render() {
     const {
       container,
@@ -71,46 +113,34 @@ export default class ProductDetails extends Component {
       buttonview,
       buynoewbuttoncolor,
     } = styles;
-    const DATA = [
-      {
-        title: 'Drones',
-        image: require('../../Assets/Product/Electronic/laptop1.jpeg'),
-      },
-      {
-        title: 'Lighting',
-        image: require('../../Assets/Product/Electronic/Laptop2.jpeg'),
-      },
-      {
-        title: 'PhotoGraphy',
-        image: require('../../Assets/Product/Electronic/laptop3.jpeg'),
-      },
-      {
-        title: 'PhotoGraphy',
-        image: require('../../Assets/Product/Electronic/laptop4.jpeg'),
-      },
-      {
-        title: 'PhotoGraphy',
-        image: require('../../Assets/Product/Electronic/laptop6.jpeg'),
-      },
-    ];
-    const animations = DATA.map(a => {
+    const {params} = this.props.navigation.state;
+    const {isvisible} = this.state;
+    const animations = params.data.Product_Image.map(a => {
+      // console.log(a)
+      // alert(a.ProductImage)
       return (
         <TouchableOpacity
           activeOpacity={1}
           onPress={() => {
-            alert('move');
+            this.modalVisble();
           }}>
-          <Image source={a.image} resizeMode={'contain'} style={imagestyle} />
+          <Image
+            source={{uri: imageurl + a}}
+            style={imagestyle}
+            resizeMode={'contain'}
+          />
         </TouchableOpacity>
       );
     });
-    const RoundView = DATA.map((a, index) => {
+
+    const RoundView = params.data.Product_Image.map((a, index) => {
       pagesize = Animated.divide(this.opacity, swidth);
       const changeOpcity = pagesize.interpolate({
         inputRange: [index - 1, index, index + 1],
         outputRange: [0.3, 1, 0.5],
         extrapolate: 'clamp',
       });
+
       return (
         <TouchableOpacity
           onPress={() => {
@@ -124,6 +154,13 @@ export default class ProductDetails extends Component {
         </TouchableOpacity>
       );
     });
+
+    if (params.data.Product_description.includes(':')) {
+      // alert(JSON.stringify(params.data));
+    } else {
+      descriptiontext = params.data.Product_description;
+    }
+
     return (
       <SafeAreaView style={container}>
         <ScrollView>
@@ -159,33 +196,43 @@ export default class ProductDetails extends Component {
             <View style={maindetailview}>
               <View style={itemdeatisview}>
                 <Text numberOfLines={2} style={[fontfamliy, headerfontsize]}>
-                  Hero Stomper 16 T Recereation Cycle(Single Speed ,Red)
+                  {params.data.Product_name}
                 </Text>
                 <View style={RatingView}>
                   <View style={Rateview}>
-                    <Text style={[fontfamliy, Ratenumber]}>4</Text>
+                    <Text style={[fontfamliy, Ratenumber]}>
+                      {params.data.rate > 0 ? params.data.rate : 0}
+                    </Text>
                     <MaterialIcons
                       name={'star'}
                       size={swidth * 0.03}
                       color={iconcolor}
                     />
                   </View>
-                  <Text style={Ratetext}>5,326 ratings</Text>
-                  <Image
-                    source={require('../../Assets/Image/flipkartAssured.png')}
-                    style={flipkartassuredStyle}
-                    resizeMode={'contain'}
-                  />
+                  <Text style={Ratetext}>{params.data.DigitsRate} ratings</Text>
+                  {params.data.Type_assured === 'yes' ? (
+                    <Image
+                      source={require('../../Assets/Image/flipkartAssured.png')}
+                      style={flipkartassuredStyle}
+                      resizeMode={'contain'}
+                    />
+                  ) : (
+                    <></>
+                  )}
                 </View>
                 <View style={SpecialView}>
                   <Text style={specialtext}>Special Price</Text>
                 </View>
                 <View style={flexdire}>
                   <Text style={[fonfamliybold, {fontSize: sheigth * 0.02}]}>
-                    {'\u20B9'}1,797
+                    {'\u20B9' + params.data.Sell_Price}
                   </Text>
-                  <Text style={[fonfamliybold, offRupee]}>3,995</Text>
-                  <Text style={[offtext, fonfamliybold]}>55% Off</Text>
+                  <Text style={[fonfamliybold, offRupee]}>
+                    {params.data.Actual_Price}
+                  </Text>
+                  <Text style={[offtext, fonfamliybold]}>
+                    {params.data.Off_percent}% Off
+                  </Text>
                 </View>
               </View>
               <View style={horizontalline} />
@@ -240,7 +287,11 @@ export default class ProductDetails extends Component {
                   </TouchableOpacity>
                 </View>
               </View>
-              <TouchableOpacity style={[shareview, shadowview]}>
+              <TouchableOpacity
+                style={[shareview, shadowview]}
+                onPress={() => {
+                  this.shareProductLink();
+                }}>
                 <MaterialCommunityIcons
                   size={sheigth * 0.03}
                   name={'share'}
@@ -255,18 +306,8 @@ export default class ProductDetails extends Component {
                   Product Description
                 </Text>
                 <Text style={DescriptiontextView}>
-                  With the Redmi 7A smartphone, you can access your digital
-                  world right in the palm of your hand. It is crafted and
-                  designed to ensure smooth operation and seamless performance.
-                  It comes with an HD Full Screen Display that enhances your
-                  viewing experience. Also, as it comes with up to 256 GB of
-                  expandable storage, you can store your favourite videos,
-                  photos, and songs and enjoy them anytime and anywhere. It also
-                  comes with powerful rear and front cameras that let you click
-                  stunning pictures and selfies. Access all these features and
-                  more, such as the High-volume Speaker, and Headphone-free FM
-                  Radio by unlocking the Redmi 7A instantly using the AI Face
-                  Unlock Technology.
+                  {'\u2022'}{' '}
+                  {params.data.Product_description.split(',')[0].trim()}
                 </Text>
               </View>
               <View style={[actionbutton, shadowview]}>
@@ -282,6 +323,11 @@ export default class ProductDetails extends Component {
               </View>
             </View>
           </View>
+          <Modal
+            visible={isvisible}
+            onClose={this.modalVisble}
+            // onFetch={this.state.data1}
+          />
         </ScrollView>
       </SafeAreaView>
     );

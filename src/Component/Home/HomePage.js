@@ -44,7 +44,7 @@ class App extends Component {
         console.log(err);
       });
   }
-  _RenderCatergories = (item, index) => {
+  _RenderCatergories = ({item, index}) => {
     const {
       allcategoriesview,
       allview,
@@ -190,9 +190,7 @@ class App extends Component {
                 horizontal={true}
                 data={CategoryData}
                 showsHorizontalScrollIndicator={false}
-                renderItem={({item, index}) =>
-                  this._RenderCatergories(item, index)
-                }
+                renderItem={this._RenderCatergories}
               />
             ) : (
               <View />

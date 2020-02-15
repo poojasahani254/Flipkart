@@ -10,6 +10,7 @@ import {
 import Icon from 'react-native-vector-icons/Entypo';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {BACKGROUND} from '../Colors/Colors';
+
 Icon.loadFont();
 let swidth = Dimensions.get('window').width;
 let sheigth = Dimensions.get('window').height;

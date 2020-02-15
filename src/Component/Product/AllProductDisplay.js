@@ -14,17 +14,18 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import ProductPageHeader from '../../Common/ProductPageHeader';
 import {BACKGROUND} from '../../Colors/Colors';
 import {connect} from 'react-redux';
 import {GetAllProduct} from '../../Action/ProductAction';
-import {NavigationEvents} from 'react-navigation';
 import _ from 'lodash';
 
 Icon.loadFont();
-let swidth = Dimensions.get('window').width;
-let sheigth = Dimensions.get('window').height;
+const swidth = Dimensions.get('window').width;
+const sheigth = Dimensions.get('window').height;
 const iconcolor = '#fff';
+const imageurl = 'http://192.168.200.175:3000/images/';
 
 class AllProductDisplay extends Component {
   constructor(props) {
@@ -41,12 +42,10 @@ class AllProductDisplay extends Component {
   }
 
   componentDidMount(): void {
-    debugger;
     this.GettingProductData();
   }
 
   async componentDidUpdate(prevProps, nextProps): void {
-    debugger;
     if (
       prevProps.navigation.state.params !== this.props.navigation.state.params
     ) {
@@ -67,7 +66,6 @@ class AllProductDisplay extends Component {
     this.props
       .GetAllProduct(obj)
       .then(response => {
-        debugger;
         if (response.data.length > 0) {
           this.setState({
             productData: _.uniqBy([...response.data], '_id'),
@@ -89,6 +87,7 @@ class AllProductDisplay extends Component {
     const {params} = this.props.navigation.state;
     const {page, count} = this.state;
     let countTotPage = (count / 8).toFixed();
+
     if (page <= countTotPage) {
       console.log('OnEachEvent' + (count / 8).toFixed());
       let Page = page + 1;
@@ -99,12 +98,9 @@ class AllProductDisplay extends Component {
       };
       this.setState({page: Page, isfooter: true});
 
-      debugger;
-      // console.log('hello onreached called' + page);
       this.props
         .GetAllProduct(obj)
         .then(response => {
-          debugger;
           this.setState({
             productData: _.uniqBy(
               [...this.state.productData, ...response.data],
@@ -128,6 +124,47 @@ class AllProductDisplay extends Component {
   };
 
   flatlistitemRender = ({item, index}) => {
+    let onestar =
+      (item.Rating_Details &&
+        item.Rating_Details[0] &&
+        item.Rating_Details[0].one_star) ||
+      0;
+
+    let twostar =
+      (item.Rating_Details &&
+        item.Rating_Details[0] &&
+        item.Rating_Details[0].two_star) ||
+      0;
+    let threestar =
+      (item.Rating_Details &&
+        item.Rating_Details[0] &&
+        item.Rating_Details[0].three_star) ||
+      0;
+    let fourstar =
+      (item.Rating_Details &&
+        item.Rating_Details[0] &&
+        item.Rating_Details[0].four_star) ||
+      0;
+    let fivestar =
+      (item.Rating_Details &&
+        item.Rating_Details[0] &&
+        item.Rating_Details[0].five_star) ||
+      0;
+
+    let totnumrate = onestar + twostar + threestar + fourstar + fivestar;
+    let ratedigits = Number(
+      (
+        (onestar + twostar * 2 + threestar * 3 + fourstar * 4 + fivestar * 5) /
+        totnumrate
+      ).toFixed(1),
+    );
+
+    const url =
+      (item.Product_Image &&
+        item.Product_Image[0] &&
+        item.Product_Image[0].ProductImage[0]) ||
+      'Not Found';
+
     const {
       ItemView,
       itemheader,
@@ -144,13 +181,30 @@ class AllProductDisplay extends Component {
       ratingtext,
       flipkartassuredStyle,
       DigitRating,
+      common,
     } = styles;
+
     return (
       <TouchableOpacity
         style={ItemView}
         onPress={() => {
-          alert(item._id);
-          this.props.navigation.navigate('ProductDetails');
+          // alert(JSON.stringify(item.Product_Image[0].ProductImage[0]));
+          // console.log(item);
+          const obj = {
+            _id: item._id,
+            Actual_Price: item.Actual_Price,
+            Product_description: item.Product_description,
+            Qty: item.Qty,
+            Sell_Price: item.Sell_Price,
+            Type: item.Type,
+            Product_name: item.Product_name,
+            Off_percent: item.Off_percent,
+            DigitsRate: totnumrate,
+            Type_assured: item.Type_assured,
+            rate: ratedigits,
+            Product_Image: item.Product_Image[0].ProductImage,
+          };
+          this.props.navigation.navigate('ProductDetails', {data: obj});
         }}>
         <View style={itemheader}>
           <TouchableOpacity>
@@ -158,18 +212,24 @@ class AllProductDisplay extends Component {
           </TouchableOpacity>
         </View>
         <View style={ItemImageView}>
-          <Image
-            source={require('../../Assets/Product/shoes1.jpeg')}
-            style={imagstyle}
-            resizeMode={'cover'}
-          />
+          {url === 'Not Found' ? (
+            <View style={[imagstyle, common]}>
+              <FontAwesome5 name={'images'} size={45} color={'gray'} />
+            </View>
+          ) : (
+            <Image
+              source={{uri: imageurl + url}}
+              style={imagstyle}
+              resizeMode={'contain'}
+            />
+          )}
         </View>
         <View style={itemdetailsview}>
           <Text style={itemtitle} numberOfLines={1}>
             {item.Product_name}
           </Text>
           <Text style={itemdescription} numberOfLines={1}>
-            {item.Product_description}
+            {item._id}
           </Text>
           <View style={flexdire}>
             <Text style={fonfamliy}>
@@ -181,15 +241,17 @@ class AllProductDisplay extends Component {
           </View>
           <View style={[flexdire, {marginTop: sheigth * 0.01}]}>
             <View style={ratingview}>
-              <Text style={[ratingtext, fonfamliy]}>3.7</Text>
+              <Text style={[ratingtext, fonfamliy]}>
+                {ratedigits > 0 ? ratedigits : 0}
+              </Text>
               <MaterialIcons
                 name={'star'}
                 size={swidth * 0.03}
                 color={iconcolor}
               />
             </View>
-            <Text style={DigitRating}>(19627)</Text>
-            {item.Type_assured ? (
+            <Text style={DigitRating}>({totnumrate})</Text>
+            {item.Type_assured === 'yes' ? (
               <Image
                 source={require('../../Assets/Image/flipkartAssured.png')}
                 style={flipkartassuredStyle}
@@ -226,15 +288,6 @@ class AllProductDisplay extends Component {
     } = styles;
     return (
       <SafeAreaView style={container}>
-        <NavigationEvents
-        // onDidFocus={() => {
-        //   this.componentDidMount();
-        // }}
-        // onWillFocus={() => {
-        //   debugger
-        //   this.componentDidMount();
-        // }}
-        />
         <Animated.View style={{height: changeOpcity1}}>
           <ProductPageHeader
             HeaderText={params.data.SubCategorName}
@@ -264,27 +317,30 @@ class AllProductDisplay extends Component {
           onScroll={Animated.event([
             {nativeEvent: {contentOffset: {y: this.opacity}}},
           ])}>
-          <View style={Childcontainer}>
-            <FlatList
-              data={productData}
-              numColumns={2}
-              showsVerticalScrollIndicator={false}
-              extraData={[this.state, this.props]}
-              keyExtractor={(item, index) => index.toString()}
-              renderItem={this.flatlistitemRender}
-              onEndReached={() => this.renderMoreData()}
-              onEndReachedThreshold={0.9}
-              ListFooterComponent={() =>
-                !isfooter ? <ActivityIndicator size={'large'} /> : null
-              }
-            />
-          </View>
-          {/*// <View style={Childcontainer}>*/}
-          {/*//   <Image*/}
-          {/*//     source={require('../../Assets/Image/nodatafound.png')}*/}
-          {/*//     style={nodataimage}*/}
-          {/*//   />*/}
-          {/*// </View>*/}
+          {isdata ? (
+            <View style={Childcontainer}>
+              <FlatList
+                data={productData}
+                numColumns={2}
+                showsVerticalScrollIndicator={false}
+                extraData={[this.state, this.props]}
+                keyExtractor={(item, index) => index.toString()}
+                renderItem={this.flatlistitemRender}
+                onEndReached={() => this.renderMoreData()}
+                onEndReachedThreshold={0.9}
+                ListFooterComponent={() =>
+                  !isfooter ? <ActivityIndicator size={'large'} /> : null
+                }
+              />
+            </View>
+          ) : (
+            <View style={Childcontainer}>
+              <Image
+                source={require('../../Assets/Image/nodatafound.png')}
+                style={nodataimage}
+              />
+            </View>
+          )}
         </ScrollView>
       </SafeAreaView>
     );
@@ -417,5 +473,9 @@ const styles = StyleSheet.create({
     width: swidth * 0.7,
     alignSelf: 'center',
     marginTop: sheigth * 0.2,
+  },
+  common: {
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });
