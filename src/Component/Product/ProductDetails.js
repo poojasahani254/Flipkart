@@ -323,12 +323,12 @@ export default class ProductDetails extends Component {
               </View>
             </View>
           </View>
-          <Modal
-            visible={isvisible}
-            onClose={this.modalVisble}
-            // onFetch={this.state.data1}
-          />
         </ScrollView>
+        <Modal
+          visible={isvisible}
+          onClose={this.modalVisble}
+          onFetch={params.data}
+        />
       </SafeAreaView>
     );
   }
