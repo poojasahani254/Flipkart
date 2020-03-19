@@ -12,7 +12,6 @@ export const GETCATEGORYData = () => {
             type: GETCATEGORY,
             payload: response.data,
           });
-
           return Promise.resolve(response.data);
         } else {
           return Promise.resolve(false);

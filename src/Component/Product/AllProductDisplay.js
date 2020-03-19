@@ -25,7 +25,7 @@ Icon.loadFont();
 const swidth = Dimensions.get('window').width;
 const sheigth = Dimensions.get('window').height;
 const iconcolor = '#fff';
-const imageurl = 'http://192.168.200.175:3000/images/';
+const imageurl = 'http://192.168.0.123:3000/images/';
 
 class AllProductDisplay extends Component {
   constructor(props) {

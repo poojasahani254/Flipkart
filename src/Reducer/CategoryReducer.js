@@ -1,6 +1,7 @@
 import {GETCATEGORY, GETPRODUCT} from '../Action/types';
 import {CategoryState} from '../state/Intialstate';
 const CategoryReducer = (state = CategoryState, action) => {
+  debugger
   switch (action.type) {
     case GETCATEGORY:
       return {

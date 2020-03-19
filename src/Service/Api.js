@@ -1,6 +1,7 @@
 import axios from 'axios';
 const Api = (url, data, method) => {
-  const url1 = 'http://192.168.200.175:3000' + url;
+  debugger
+  const url1 = 'http://192.168.0.123:3000' + url;
   switch (method) {
     case 'post':
       return axios

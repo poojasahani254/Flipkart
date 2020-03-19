@@ -25,7 +25,7 @@ Icon.loadFont();
 let swidth = Dimensions.get('window').width;
 let sheigth = Dimensions.get('window').height;
 const iconcolor = '#fff';
-const catimage = 'http://192.168.200.175:3000/images/Image/category/';
+const catimage = 'http://192.168.0.123:3000/images/Image/category/';
 
 class App extends Component {
   constructor(props) {
@@ -38,7 +38,8 @@ class App extends Component {
     this.props
       .GETCATEGORYData()
       .then(response => {
-        // console.log(response);
+
+        console.log(response);
       })
       .catch(err => {
         console.log(err);
@@ -188,7 +189,7 @@ class App extends Component {
             {CategoryData != null && CategoryData.length != 0 ? (
               <FlatList
                 horizontal={true}
-                data={CategoryData}
+                data={CategoryData && CategoryData}
                 showsHorizontalScrollIndicator={false}
                 renderItem={this._RenderCatergories}
               />

@@ -19,7 +19,7 @@ Icon.loadFont();
 let swidth = Dimensions.get('window').width;
 let sheigth = Dimensions.get('window').height;
 const iconcolor = '#fff';
-const imgurl = 'http://192.168.200.175:3000/images/';
+const imgurl = 'http://192.168.0.123:3000/images/';
 
 const CommonModal = props => {
   const {visible, onClose, onFetch} = props;

@@ -16,7 +16,7 @@ import {connect} from 'react-redux';
 // Icon.loadFont();
 let swidth = Dimensions.get('window').width;
 let sheigth = Dimensions.get('window').height;
-const catimage = 'http://192.168.200.175:3000/images/Image/category/';
+const catimage = 'http://192.168.0.123:3000/images/Image/category/';
 
 class AllProductCategory extends Component {
   constructor(props) {

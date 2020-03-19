@@ -30,6 +30,7 @@ export default class Layout2 extends Component {
   }
 
   componentDidMount(): void {
+    debugger
     Api(imageurl, '', 'get')
       .then(response => {
         this.setState({allData: response.data, loader: true});
@@ -82,7 +83,7 @@ export default class Layout2 extends Component {
       return (
         <Image
           source={{
-            uri: 'http://192.168.200.175:3000/images/Image/' + a.BannerImage,
+            uri: 'http://192.168.0.123:3000/images/Image/' + a.BannerImage,
           }}
           resizeMode={'cover'}
           style={modal}

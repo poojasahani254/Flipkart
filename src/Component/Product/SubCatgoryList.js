@@ -32,15 +32,18 @@ class SubCategory extends Component {
   }
 
   componentDidMount(): void {
+    debugger
     const obj = {
       Category_id: '5e380674e967fc10a663e300',
     };
 
+    debugger
     this.props
       .GetSubCategory(obj)
       .then(response => {
         this.setState({SubCategory: response.data});
 
+        debugger
         this.props
           .GetChildSubCategory()
           .then(res => {
@@ -78,6 +81,7 @@ class SubCategory extends Component {
         }
       });
 
+    debugger
     return (
       <SafeAreaView style={container}>
         <View style={container}>
